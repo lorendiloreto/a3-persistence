@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Punt Tracker</title>
+    <script src="js/script.js"></script>
+    <script src="js/mainScript.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/mini-nord.css">
+</head>
+<body>
+    <header>
+        <a href="#" class="logo">PuntTracker</a>
+        <a href="main.html" class="button">Home</a>
+        <a href="index.html" class="button">Sign out</a>
+    </header>
+    <div class="row">
+        <form class="col-sm-12 col-md-3 col-lg-3" id="profile">
+            <fieldset>
+            <legend class="doc"></legend>
+            <h1 id="user-profile">First Last <small>@username</small> <small>Organization</small> <small>Joined: 02/20</small></h1>
+            <div class="row responsive-label">
+                <label for="modal-control" class="col-lg-5 button inverse">Edit Profile</label>
+                <input type="checkbox" id="modal-control" class="modal">
+                <div>
+                    <div class="card">
+                        <label for="modal-control" class="modal-close" ></label>
+                        <h3 class="section">Edit Profile</h3>
+                        <form class="col-sm-12 col-md-4 col-lg-4" id="signUpForm">
+                            <fieldset>
+                            <div class="row responsive-label input-group fluid">
+                                <div class="col-sm-12 col-md-5">
+                                    <label for="e1-text" class="doc">First Name</label>
+                                </div>
+                                <div class="col-sm-12 col-md">
+                                    <input type="text" placeholder="First Name" class="doc" id="e1-text">
+                                </div>
+                            </div>
+                            <div class="row responsive-label input-group fluid">
+                                <div class="col-sm-12 col-md-5">
+                                    <label for="e2-text" class="doc">Last Name</label>
+                                </div>
+                                <div class="col-sm-12 col-md">
+                                    <input type="text" placeholder="Last Name" class="doc" id="e2-text">
+                                </div>
+                            </div>
+                            <div class="row responsive-label input-group fluid">
+                                <div class="col-sm-12 col-md-5">
+                                    <label for="e3-text" class="doc">Username</label>
+                                </div>
+                                <div class="col-sm-12 col-md">
+                                    <input type="text" placeholder="Username" class="doc" id="e3-text">
+                                </div>
+                            </div>
+                            <div class="row responsive-label input-group fluid">
+                                <div class="col-sm-12 col-md-5">
+                                    <label for="e6-text" class="doc">School/Organization</label>
+                                </div>
+                                <div class="col-sm-12 col-md">
+                                    <input type="text" placeholder="Organization" class="doc" id="e6-text">
+                                </div>
+                            </div>
+                            <div class="row responsive-label input-group fluid">
+                                <div class="col-sm-12 col-md-5">
+                                    <label for="e4-text" class="doc">Password</label>
+                                </div>
+                                <div class="col-sm-12 col-md">
+                                    <input type="password" placeholder="Password" class="doc" id="e4-text">
+                                </div>
+                            </div>
+                            <div class="row responsive-label input-group fluid">
+                                <div class="col-sm-12 col-md-5">
+                                    <label for="e5-text" class="doc">Confirm Password</label>
+                                </div>
+                                <div class="col-sm-12 col-md">
+                                    <input type="password" placeholder="Password" class="doc" id="e5-text">
+                                </div>
+                            </div>
+                            <div class="row responsive-label">
+                                <button class="tertiary" id="editButton" type="button">Submit</button>
+                            </div>
+                            </fieldset>
+                        </form>
+                    </div>
+                </div>
+                <!-- <button class="secondary col-lg-5" type="button">Delete Profile</button> -->
+                <label for="delete-confirm" class="button secondary col-lg-4">Delete Profile</label>
+                <input type="checkbox" id="delete-confirm" class="modal">
+                <div>
+                    <div class="card">
+                        <label for="delete-confirm" class="modal-close" ></label>
+                        <h3 class="section">Delete Account</h3>
+                        <p class="section">Are you sure you want to delete your account?</p>
+                        <button class="secondary">Delete</button>
+                    </div>
+                </div>
+            </div>
+            </fieldset>
+        </form>
+        <form class="col-sm-12 col-md col-lg" id="stats">
+            <fieldset>
+            <legend class="doc"></legend>
+            <h1>Stats</h1>
+            </fieldset>
+        </form>
+    </div>
+</body>
+</html>
