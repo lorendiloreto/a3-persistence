@@ -6,9 +6,6 @@ window.onload = function() {
 const signUp = function(e) {
     e.preventDefault()
 
-    console.log("fuck you")
-    debugger
-
     const firstName = document.getElementById("su1-text")
     const lastName = document.getElementById("su2-text")
     const username = document.getElementById("su3-text")
