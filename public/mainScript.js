@@ -1,7 +1,9 @@
 window.onload = function() {
     getCurrentUser()
-    const button = document.querySelector('#editButton')
-    button.onclick = editProfile
+    const editButton = document.querySelector('#editButton')
+    editButton.onclick = editProfile
+    const deleteButton = document.querySelector('#deleteButton')
+    deleteButton.onclick = deleteProfile
 }
 
 function generateProfile(user) {
@@ -41,6 +43,17 @@ const editProfile = function(e) {
         method:'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(json)
+    })
+    .then(function(response) {
+        console.log(response.body)
+    })
+}
+
+const deleteProfile = function(e) {
+    e.preventDefault()
+
+    fetch ('delete', {
+        method:'POST'
     })
     .then(function(response) {
         console.log(response.body)

@@ -1,17 +1,3 @@
-// function sendPost() {
-//     const json = { milk: 10 }
-//     fetch( '/handle', {
-//         method:'POST',
-//         headers: { 'Content-Type': 'application/json' },
-//         body: JSON.stringify(json)
-//     })
-//     .then(function(response) {
-//         return response.json()
-//     })
-//     .then(function(json) {
-//         console.log(json)
-//     })
-// }
 window.onload = function() {
     const button = document.querySelector('#signUpButton')
     button.onclick = signUp
@@ -19,6 +5,9 @@ window.onload = function() {
 
 const signUp = function(e) {
     e.preventDefault()
+
+    console.log("fuck you")
+    debugger
 
     const firstName = document.getElementById("su1-text")
     const lastName = document.getElementById("su2-text")
@@ -42,9 +31,9 @@ const signUp = function(e) {
     if (checkField(passwordConfirm)) { return }
     if (checkPassword(password, passwordConfirm)) { return }
 
-    var today = new Date();
-    var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-    var yyyy = today.getFullYear();
+    var today = new Date()
+    var mm = String(today.getMonth() + 1).padStart(2, '0') //January is 0!
+    var yyyy = today.getFullYear()
     const joinDate = mm + "/" + yyyy
 
     json = { "firstName": firstName.value, "lastName": lastName.value, "username": username.value, 
@@ -63,7 +52,9 @@ const signUp = function(e) {
 
 function getCurrentUser() {
     fetch ('currentUser', {
-        method:'POST'
+        method:'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ "test": "test"})
     })
     .then(function(response) {
         return response.json()

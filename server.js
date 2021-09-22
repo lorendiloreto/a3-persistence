@@ -6,6 +6,8 @@ const router = express.Router()
 const bodyParser = require("body-parser")
 let currentUser
 
+const publicDirectoryPath = path.join(__dirname, 'public')
+app.use(express.static(publicDirectoryPath))
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 app.use( express.urlencoded({ extended:true }))
@@ -38,6 +40,7 @@ app.post( '/login', async (req,res)=> {
     // define a variable that we can check in other middleware
     // the session object is added to our requests by the cookie-session middleware
     req.session.login = true
+    console.log(req.session.login)
     currentUser = existUsername.username
     
     // since login was successful, send the user to the main content
@@ -54,6 +57,7 @@ app.post( '/login', async (req,res)=> {
 })
 
 app.get('/homePage', (req, res) => res.sendFile(__dirname + '/protected/main.html'));
+app.get('/loginPage', (req, res) => res.sendFile(__dirname + '/public/index.html'));
 
 app.use( function( req,res,next) {
   if( req.session.login === true )
@@ -63,7 +67,6 @@ app.use( function( req,res,next) {
 })
 
 app.use("/", router);
-app.use(express.static('public'));
 app.listen(process.env.port || 3000);
 
 console.log('Running at Port 3000');
@@ -106,13 +109,13 @@ client.connect()
   })
   .then( console.log )
 
-  app.use( (req,res,next) => {
-    if( collection !== null ) {
-      next()
-    }else{
-      res.status( 503 ).send()
-    }
-  })
+app.use( (req,res,next) => {
+  if( collection !== null ) {
+    next()
+  }else{
+    res.status( 503 ).send()
+  }
+})
 
 app.post( '/addUser', async (req,res) => {
   // assumes only one object to insert
@@ -152,4 +155,14 @@ app.post( '/update', (req,res) => {
       }
     )
     .then( result => {res.json( result )} )
+})
+
+app.post( '/delete', (req, res) => {
+  console.log("removing account")
+  collection.deleteOne({ "username": currentUser })
+  console.log("removing cookie")
+  req.session.login = false
+  console.log("redirecting")
+  res.redirect(__dirname + '/public/index.html')
+  console.log("done removing account")
 })
