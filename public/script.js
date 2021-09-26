@@ -43,6 +43,7 @@ const signUp = function(e) {
         body: JSON.stringify(json)
     })
     .then(function(response) {
+        window.location.href = response.url
         console.log(response.body)
     })
 }

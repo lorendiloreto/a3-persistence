@@ -1,3 +1,9 @@
+/**
+ * CURRENT ERRORS
+ *  Need to add error codes for incorrect fields on login and edit fields forms
+ *  Edit modal does not close after edits have been submitted
+ */
+
 const express = require('express')
 const cookie = require('cookie-session')
 const app = express()
@@ -40,15 +46,16 @@ app.post( '/login', async (req,res)=> {
     // define a variable that we can check in other middleware
     // the session object is added to our requests by the cookie-session middleware
     req.session.login = true
-    console.log(req.session.login)
-    currentUser = existUsername.username
+    req.session.currentUser = existUsername.username
+    console.log(req.session.currentUser)
+    //currentUser = existUsername.username
     
     // since login was successful, send the user to the main content
     // use redirect to avoid authentication problems when refreshing
     // the page or using the back button, for details see:
     // https://stackoverflow.com/questions/10827242/understanding-the-post-redirect-get-pattern 
     res.redirect(301, '/homePage')
-    console.log(`Signed in as ${currentUser}`)
+    console.log(`Signed in as ${req.session.currentUser}`)
   }else{
     // password incorrect, redirect back to login page
     res.sendFile( __dirname + '/public/index.html' )
@@ -56,8 +63,22 @@ app.post( '/login', async (req,res)=> {
   }
 })
 
-app.get('/homePage', (req, res) => res.sendFile(__dirname + '/protected/main.html'));
-app.get('/loginPage', (req, res) => res.sendFile(__dirname + '/public/index.html'));
+app.post('/logout', (req, res) => {
+  req.session.login = false
+  req.session.currentUser = null
+  res.redirect(301, '/loginPage')
+  console.log("logged out")
+})
+
+app.get('/homePage', (req, res) => {
+  if (req.session.login) {
+    res.sendFile(__dirname + '/protected/main.html')
+  }
+  else {
+    res.redirect(301, '/loginPage')
+  }
+})
+app.get('/loginPage', (req, res) => res.sendFile(__dirname + '/public/index.html'))
 
 app.use( function( req,res,next) {
   if( req.session.login === true )
@@ -66,19 +87,15 @@ app.use( function( req,res,next) {
     res.sendFile( __dirname + '/public/index.html' )
 })
 
-app.use("/", router);
+// app.use("/", router);
 app.listen(process.env.port || 3000);
 
 console.log('Running at Port 3000');
 
 app.post( '/currentUser', async (request, response) => {
-  const existUsername = await collection.findOne({ username: currentUser });
-  console.log(existUsername)
+  const existUsername = await collection.findOne({ username: request.session.currentUser });
   if (existUsername) {
-    //response.writeHead( 200, { 'Content-Type': 'application/json'})
-    //response.send(JSON.stringify(existUsername))
     response.status(200).json(existUsername);
-    //response.send("success")
   }
   else {
     response.writeHead( 200, { 'Content-Type': 'application/json'})
@@ -92,6 +109,8 @@ app.post( '/currentUser', async (request, response) => {
 
 const mongodb = require('mongodb')
 const { addAbortSignal } = require('stream')
+const { Console } = require('console')
+const { request } = require('http')
 const uri = "mongodb+srv://lorendiloreto:SuGTEtUd1y4ePrGZ@a3.xyxng.mongodb.net/a3?retryWrites=true&w=majority"
 const client = new mongodb.MongoClient( uri, { useNewUrlParser: true, useUnifiedTopology:true })
 let collection = null
@@ -129,10 +148,11 @@ app.post( '/addUser', async (req,res) => {
     console.log('username taken');
     return
   }
-  collection.insertOne( req.body ).then( result => res.json( result ) )
-  // req.session.login = true
-  // res.redirect(301, '/homePage')
-  // console.log("correct password")
+  collection.insertOne( req.body ).then( result => {
+    req.session.login = true
+    req.session.currentUser = req.body.username
+    res.redirect(301, '/homePage')
+  })
 })
 
 // assumes req.body takes form { _id:5d91fb30f3f81b282d7be0dd } etc.
@@ -145,24 +165,37 @@ app.post( '/remove', (req,res) => {
 app.post( '/update', (req,res) => {
   collection
     .updateOne(
-      { username: currentUser },
+      { username: req.session.currentUser },
       { $set:{ 
         firstName: req.body.firstName,
         lastName: req.body.lastName,
         username: req.body.username,
-        organization: req.body.organization
+        organization: req.body.organization,
+        password: req.body.password
        }
       }
     )
-    .then( result => {res.json( result )} )
+    .then( result => {
+      req.session.currentUser = req.body.username
+      res.json( result )
+    })
 })
 
 app.post( '/delete', (req, res) => {
-  console.log("removing account")
-  collection.deleteOne({ "username": currentUser })
-  console.log("removing cookie")
+  collection.deleteOne({ "username": req.session.currentUser })
+  res.redirect(301, '/loginPage')
   req.session.login = false
-  console.log("redirecting")
-  res.redirect(__dirname + '/public/index.html')
-  console.log("done removing account")
+})
+
+app.post( '/addPunt', (req, res) => {
+  console.log("adding to database")
+  
+  collection.
+    updateOne(
+      { username: req.session.currentUser },
+      { $push:{ punts: req.body }}
+    )
+    .then(
+      res.end("added to database")
+      )
 })
